@@ -14,18 +14,19 @@ app.get('/getNote',function (req, res) {
 });
 
 app.post('/updateNote/:note', function (req, res) {
-  res.send(stringifyFile + req.params.note);
-    fs.writeFile('./test.json', stringifyFile, function(err) {
-    if (err) throw err; 
-    console.log('file updated');
-   })
+    if (stringifyFile === 'undefined') {
+    res.redirect('/getNote');
+  }
+   stringifyFile = req.params.note;
+   fs.writeFile('./test.json', stringifyFile, function(err) {
+      if (err) throw err; 
+      console.log('file updated');
+      res.send('File updated: ' + stringifyFile);
+   });
 });
 
 
-var server = app.listen(3000, function() {
-    console.log('Aplikacja nasłuchuje na http://localhost:3000');
-});
-
+var server = app.listen(3000);
 
 app.use(function (req, res, next) {
     res.status(404).send('Wybacz, nie mogliśmy odnaleźć tego, czego żądasz!')
